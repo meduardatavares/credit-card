@@ -2,7 +2,7 @@
 (ns credit_card.db
   (:require [java-time :as time]))
 
-(def cliente  {:nome "Joao"
+(def cliente1  {:nome "Joao"
                :cpf 12345678
                :email "joao@gmail.com"
                :cartao {:numero 5274639975504476
@@ -49,5 +49,5 @@
 
 
 (defn retorna-cartao []
-  (:cartao cliente))
+  (:cartao cliente1))
 
