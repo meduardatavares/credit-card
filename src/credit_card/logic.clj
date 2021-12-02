@@ -23,7 +23,7 @@
   (->> (compras-realizadas-cliente cliente)
        (group-by :categoria)
        (map valor-total-das-compras-por-categoria)
-       pprint))
+       ))
 
 (defn fatura-do-mes
   [compras mes ano]
@@ -41,13 +41,11 @@
 (defn compras-por-valor
   [cliente valor]
   (->> (compras-realizadas-cliente cliente)
-       (filter #(> (:valor %) valor))
-       pprint))
+       (filter #(and (>= (:valor %) valor) (> valor 0 ))
+       )))
 
 (defn compras-por-estabelecimento
   [cliente estabelecimento]
   (->> (compras-realizadas-cliente cliente)
        (filter #(= (:estabelecimento %) estabelecimento))
-       pprint))
-
-
+       ))
