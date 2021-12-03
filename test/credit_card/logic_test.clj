@@ -159,5 +159,11 @@
     (is (= [] (compras-por-valor mock1 -600 )))
     ))
 
-
+(deftest adiciona-compra-test
+  (testing "Retorna lista com novas compras"
+    (is (= count (adiciona-compra mock2 {:id :compra1
+                                      :data "10/10/2021"
+                                      :valor 250.0
+                                      :estabelecimento "Curso wizard"
+                                      :categoria "Alimentação"})  ))))
 

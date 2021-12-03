@@ -49,3 +49,9 @@
   (->> (compras-realizadas-cliente cliente)
        (filter #(= (:estabelecimento %) estabelecimento))
        ))
+
+(defn adiciona-compra [cliente nova-compra]
+  (conj (compras-realizadas-cliente cliente) nova-compra))
+
+
+
