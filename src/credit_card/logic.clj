@@ -8,7 +8,7 @@
 
 (s/set-fn-validation! true)
 
-(def Compra
+(s/def Compra
   {:id              s/Keyword
    :data            LocalDate
    :valor           s/Num
@@ -17,10 +17,10 @@
 
    })
 
-(def Compras
+(s/def Compras
   [Compra])
 
-(def Cartao
+(s/def Cartao
   {:numero             s/Num
    :cvv                s/Num
    :validade           LocalDate
@@ -37,26 +37,26 @@
 
 
 (s/defn valor-total-das-compras
-        [compras :- Compras]
-        (->> compras
-             (map :valor)
-             (reduce +)))
+  [compras :- Compras]
+  (->> compras
+       (map :valor)
+       (reduce +)))
 
 (s/defn valor-total-das-compras-por-categoria
-  [[categoria  compras]]
+  [[categoria compras]]
   {categoria
    (valor-total-das-compras compras)})
 
 (s/defn compras-realizadas-cliente
-        [cliente :- Cliente]
-        (:compras-realizadas (:cartao cliente)))
+  [cliente :- Cliente]
+  (:compras-realizadas (:cartao cliente)))
 
 (s/defn gastos-por-categoria
-   [cliente :- Cliente]
-   (->> (compras-realizadas-cliente cliente)
-             (group-by :categoria)
-             (map valor-total-das-compras-por-categoria)
-        ))
+  [cliente :- Cliente]
+  (->> (compras-realizadas-cliente cliente)
+       (group-by :categoria)
+       (map valor-total-das-compras-por-categoria)
+       ))
 
 (s/defn fatura-do-mes
   [compras :- Compras mes :- Month ano :- Year]
@@ -80,11 +80,22 @@
 (s/defn compras-por-estabelecimento
   [cliente :- Cliente estabelecimento :- s/Str]
   (->> (compras-realizadas-cliente cliente)
-       (filter #(= (:estabelecimento %) estabelecimento))
-       ))
+       (filter #(= (:estabelecimento %) estabelecimento))))
 
-(s/defn adiciona-compra [cliente :- Cliente nova-compra :- Compra]
-  (conj (compras-realizadas-cliente cliente) nova-compra))
+(s/defn adiciona-compra
+  [compras nova-compra]
+  (conj compras nova-compra))
 
+(defn atualiza-compras-cliente
+  [cliente compras]
+  (let [cartao (get cliente :cartao)
+        novo-cartao (assoc cartao :compras-realizadas compras)]
+    (assoc cliente :cartao novo-cartao)))
+
+(defn compra-de-cliente
+  [cliente compra]
+  (let [compras-antigas (compras-realizadas-cliente cliente)
+        compras-atualizadas (adiciona-compra compras-antigas compra)]
+    (atualiza-compras-cliente cliente compras-atualizadas)))
 
 

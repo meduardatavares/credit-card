@@ -2,7 +2,10 @@
   (:require [clojure.test :refer :all]
             [credit_card.logic :refer :all]
             [credit_card.db :refer :all]
-            [java-time :as time]))
+            [clojure.test.check.generators :as gen]
+            [java-time :as time]
+            [schema.core :as s]
+            [schema-generators.generators :as g]))
 (def mock1 {:nome   "mateus"
             :cpf    123
             :email  "joao@gmail.com"
@@ -70,6 +73,7 @@
                                            :valor           50.0,
                                            :estabelecimento "ABC",
                                            :categoria       "Alimentação"}]}})
+
 
 (deftest compras-por-estabelecimento-test
   (testing "compras por estabelecimento"
